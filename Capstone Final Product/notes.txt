@@ -1,0 +1,14 @@
+- completed player movement script 
+- used signals to control attacking animation issue 
+
+Next thing to do:
+	- add attacking cooldowns 
+	
+Out of scope:
+	- air attacks 
+
+
+Map Base:
+	- game timer
+	- settings button
+	- health bar 
