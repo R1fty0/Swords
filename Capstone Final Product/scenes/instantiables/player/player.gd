@@ -1,8 +1,9 @@
 extends CharacterBody2D
-
+class_name Player
 
 const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
+@onready var multiplayer_synchronizer = %MultiplayerSynchronizer
 
 @onready var animated_sprite = $AnimatedSprite2D
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
@@ -10,15 +11,14 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var is_jumping: bool = false
 var no_movement: bool = false 
 
-func _enter_tree():
-	# Set player multiplayer authority. 
-	set_multiplayer_authority(str(name).to_int())
+
+func _ready():
+	multiplayer_synchronizer.set_multiplayer_authority(str(name).to_int())
 
 func _physics_process(delta):
-	if not is_multiplayer_authority(): 
-		return 
-	movement()
-	jumping(delta)
+	if multiplayer_synchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
+		movement()
+		jumping(delta)
 	
 func movement():
 	# Prevent the player from contiuning to move while attacking 

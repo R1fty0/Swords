@@ -43,8 +43,8 @@
 [ext_resource type="Texture2D" uid="uid://d6iysiem2vn2" path="res://assets/art/Treasure Hunters/Treasure Hunters/Captain Clown Nose/Sprites/Captain Clown Nose/Captain Clown Nose with Sword/10-Run Sword/Run Sword 06.png" id="36_p8j0m"]
 [ext_resource type="Script" path="res://scenes/instantiables/player/combat_controller.gd" id="38_rqt6e"]
 [ext_resource type="Script" path="res://scenes/instantiables/player/health_component.gd" id="39_axp2d"]
-[ext_resource type="Script" path="res://scripts/hitbox.gd" id="39_lxpmc"]
 [ext_resource type="Script" path="res://scripts/hurtbox.gd" id="41_bphrx"]
+[ext_resource type="Script" path="res://scenes/instantiables/player/player_weapon_hitbox.gd" id="45_yft51"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_wutvr"]
 animations = [{
@@ -232,21 +232,15 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_w14fm"]
 radius = 14.0
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_hjb3b"]
-
 [sub_resource type="CircleShape2D" id="CircleShape2D_a8gny"]
 radius = 15.1327
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_hl72a"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_hjb3b"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_aof7r"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
-properties/1/path = NodePath("AnimatedSprite2D:animation")
-properties/1/spawn = true
-properties/1/replication_mode = 1
-properties/2/path = NodePath("AnimatedSprite2D:flip_h")
-properties/2/spawn = true
-properties/2/replication_mode = 1
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_je6jl")
@@ -254,7 +248,7 @@ script = ExtResource("1_je6jl")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_wutvr")
-animation = &"hit"
+animation = &"idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(1, -3)
@@ -262,9 +256,9 @@ shape = SubResource("CircleShape2D_w14fm")
 
 [node name="CombatController" type="Node2D" parent="."]
 script = ExtResource("38_rqt6e")
-attack_1_cooldown = 1.0
-attack_2_cooldown = 2.0
-attack_3_cooldown = 3.0
+attack_1_cooldown = 0.5
+attack_2_cooldown = 1.0
+attack_3_cooldown = 1.5
 
 [node name="Timers" type="Node" parent="CombatController"]
 
@@ -277,28 +271,40 @@ one_shot = true
 [node name="Attack3Timer" type="Timer" parent="CombatController/Timers"]
 one_shot = true
 
-[node name="Hitbox" type="Area2D" parent="CombatController"]
-position = Vector2(25, 3)
-script = ExtResource("39_lxpmc")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CombatController/Hitbox"]
-position = Vector2(4, -1)
-shape = SubResource("CircleShape2D_hjb3b")
-debug_color = Color(0.996078, 0, 0.160784, 0.419608)
-
-[node name="HealthComponent" type="Node2D" parent="."]
-script = ExtResource("39_axp2d")
-
-[node name="Hurtbox" type="Area2D" parent="."]
+[node name="PlayerHurtbox" type="Area2D" parent="."]
 script = ExtResource("41_bphrx")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerHurtbox"]
 position = Vector2(1, -1)
 shape = SubResource("CircleShape2D_a8gny")
 debug_color = Color(0.607843, 0.541176, 0, 0.419608)
 
+[node name="HealthComponent" type="Node2D" parent="."]
+script = ExtResource("39_axp2d")
+
+[node name="WeaponHitbox" type="Node2D" parent="."]
+
+[node name="Hitbox" type="Area2D" parent="WeaponHitbox" node_paths=PackedStringArray("left_hitbox_pos", "right_hitbox_pos", "player")]
+position = Vector2(23, 3)
+script = ExtResource("45_yft51")
+left_hitbox_pos = NodePath("../LeftHitboxPosition")
+right_hitbox_pos = NodePath("../RightHitboxPosition")
+player = NodePath("../..")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WeaponHitbox/Hitbox"]
+position = Vector2(4, -1)
+shape = SubResource("CircleShape2D_hjb3b")
+debug_color = Color(0.996078, 0, 0.160784, 0.419608)
+
+[node name="LeftHitboxPosition" type="Marker2D" parent="WeaponHitbox"]
+position = Vector2(-29, 2)
+
+[node name="RightHitboxPosition" type="Marker2D" parent="WeaponHitbox"]
+position = Vector2(27, 2)
+
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_hl72a")
+unique_name_in_owner = true
+replication_config = SubResource("SceneReplicationConfig_aof7r")
 
 [connection signal="attack_ended" from="CombatController" to="." method="_on_combat_controller_attack_ended"]
 [connection signal="attacking" from="CombatController" to="." method="_on_combat_controller_attacking"]

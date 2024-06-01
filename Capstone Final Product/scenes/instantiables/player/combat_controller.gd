@@ -24,7 +24,11 @@ var attack_3: Attack
 @onready var attack_1_timer = $Timers/Attack1Timer
 @onready var attack_2_timer = $Timers/Attack2Timer
 @onready var attack_3_timer = $Timers/Attack3Timer
-@onready var hitbox = $Hitbox
+@onready var hitbox = $"../WeaponHitbox/Hitbox"
+@onready var multiplayer_synchronizer = %MultiplayerSynchronizer
+
+
+
 
 
 class Attack:
@@ -75,24 +79,22 @@ class Attack:
 
 
 func _ready():
-	if not owner.is_multiplayer_authority(): 
-		return
-	# Initalize classes.
-	attack_1 = Attack.new("fire1", "attack_1", attack_1_timer, attack_1_cooldown, attacking, attack_ended, animated_sprite, hitbox, attack_1_damage)
-	attack_2 = Attack.new("fire2", "attack_2", attack_2_timer, attack_2_cooldown, attacking, attack_ended, animated_sprite, hitbox, attack_2_damage)
-	attack_3 = Attack.new("fire3", "attack_3", attack_3_timer, attack_2_cooldown, attacking, attack_ended, animated_sprite, hitbox, attack_3_damage)
-	
-	# Set up attack cooldown timers and hitboxes. 
-	attack_1.setup_timer()
-	attack_2.setup_timer()
-	attack_3.setup_timer()	
-	
-	# Disable hitbox on game start. 
-	hitbox.get_node("CollisionShape2D").disabled = true
+	if multiplayer_synchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
+		# Initalize classes.
+		attack_1 = Attack.new("fire1", "attack_1", attack_1_timer, attack_1_cooldown, attacking, attack_ended, animated_sprite, hitbox, attack_1_damage)
+		attack_2 = Attack.new("fire2", "attack_2", attack_2_timer, attack_2_cooldown, attacking, attack_ended, animated_sprite, hitbox, attack_2_damage)
+		attack_3 = Attack.new("fire3", "attack_3", attack_3_timer, attack_2_cooldown, attacking, attack_ended, animated_sprite, hitbox, attack_3_damage)
+		
+		# Set up attack cooldown timers and hitboxes. 
+		attack_1.setup_timer()
+		attack_2.setup_timer()
+		attack_3.setup_timer()	
+		
+		# Disable hitbox on game start. 
+		hitbox.get_node("CollisionShape2D").disabled = true
 	
 func _input(event):
-	if not owner.is_multiplayer_authority(): 
-		return
-	attack_1.attack(event)
-	attack_2.attack(event)
-	attack_3.attack(event)	
+	if multiplayer_synchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
+		attack_1.attack(event)
+		attack_2.attack(event)
+		attack_3.attack(event)	

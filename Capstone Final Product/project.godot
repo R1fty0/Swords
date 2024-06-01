@@ -11,14 +11,26 @@ config_version=5
 [application]
 
 config/name="Capstone Final Product"
-run/main_scene="res://scenes/levels/maps/map_1.tscn"
+run/main_scene="res://scenes/menus/debug/main_menu.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[autoload]
+
+GameManager="*res://scripts/game_manager.gd"
 
 [display]
 
 window/stretch/mode="canvas_items"
 window/stretch/aspect="ignore"
+
+[file_customization]
+
+folder_colors={
+"res://assets/": "red",
+"res://scenes/": "green",
+"res://scripts/": "blue"
+}
 
 [input]
 

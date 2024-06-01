@@ -12,3 +12,8 @@ Map Base:
 	- game timer
 	- settings button
 	- health bar 
+	
+- Still reliant on videos for completed UI
+
+Questions:
+	- ask Goldilocks about this: multiplayer.set_multiplayer_peer(peer)

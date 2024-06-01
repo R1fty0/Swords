@@ -10,7 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://ba8lxlmxdw02q" path="res://assets/art/Treasure Hunters/Treasure Hunters/Merchant Ship/Sprites/Barrel/Hit/3.png" id="8_qhcxy"]
 [ext_resource type="Texture2D" uid="uid://d25aq2afwuusg" path="res://assets/art/Treasure Hunters/Treasure Hunters/Merchant Ship/Sprites/Barrel/Hit/4.png" id="9_lioqk"]
 [ext_resource type="Texture2D" uid="uid://bmta2mbkjk21m" path="res://assets/art/Treasure Hunters/Treasure Hunters/Merchant Ship/Sprites/Barrel/Idle/1.png" id="10_b24jw"]
-[ext_resource type="Script" path="res://scenes/instantiables/barrel.gd" id="11_q7j68"]
+[ext_resource type="Script" path="res://scenes/instantiables/barrel/barrel.gd" id="11_q7j68"]
 [ext_resource type="Script" path="res://scripts/hurtbox.gd" id="11_wmcbr"]
 [ext_resource type="Script" path="res://scenes/instantiables/player/health_component.gd" id="12_mp2a6"]
 

@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://b6jwtm8wtbnr0"]
 
 [ext_resource type="Texture2D" uid="uid://xfwx10qafrfm" path="res://assets/art/Treasure Hunters/Treasure Hunters/Wood and Paper UI/Sprites/Life Bars/Big Bars/1.png" id="1_6fwws"]
-[ext_resource type="Script" path="res://scenes/instantiables/player/health_bar.gd" id="1_d28kf"]
+[ext_resource type="Script" path="res://scenes/instantiables/health_bar/health_bar.gd" id="1_d28kf"]
 [ext_resource type="Texture2D" uid="uid://boxcjtqqdwmhl" path="res://assets/art/Treasure Hunters/Treasure Hunters/Wood and Paper UI/Sprites/Life Bars/Big Bars/3.png" id="2_5ufjp"]
 [ext_resource type="Texture2D" uid="uid://dcc6ncwgp4dl1" path="res://assets/art/Treasure Hunters/Treasure Hunters/Wood and Paper UI/Sprites/Life Bars/Big Bars/4.png" id="3_5odkf"]
 [ext_resource type="Texture2D" uid="uid://x4un2xt62t35" path="res://assets/art/Treasure Hunters/Treasure Hunters/Wood and Paper UI/Sprites/Life Bars/Colors/1.png" id="4_xtfj0"]

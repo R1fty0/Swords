@@ -1,0 +1,99 @@
+extends Control
+
+const PORT = 8690
+@export_category("References")
+@export var player_name: LineEdit
+
+@export_category("Settings")
+@export_range(1,4) var max_clients: int = 2
+@export var address = "127.0.0.1"
+@export var packet_compression_mode: ENetConnection.CompressionMode = ENetConnection.COMPRESS_NONE
+var peer: ENetMultiplayerPeer
+
+func _ready():
+	multiplayer.peer_connected.connect(peer_connected)
+	multiplayer.peer_disconnected.connect(peer_disconnected)
+	multiplayer.connected_to_server.connect(connected_to_server)
+	multiplayer.connection_failed.connect(connection_failed)
+
+
+func _process(delta):
+	pass
+
+# Called on server and clients when peer connects.
+func peer_connected(id):
+	print("Player Connected: " + str(id))
+	
+# Called on server and clients when peer disconnects.
+func peer_disconnected(id):
+	print("Player Disconnected: " + str(id))
+	
+# Called on client when client connects.
+func connected_to_server():
+	print("Connected to Server.")
+	# Add client info to server. 
+	send_player_info.rpc_id(1, player_name.text, multiplayer.get_unique_id())
+	
+# Called on client when client fails to connects.	
+func connection_failed():
+	print("Connected failed.")
+	
+	
+
+@rpc("any_peer")
+func send_player_info(name: StringName, id):
+	# Check if the peer's game manager has a reference to this player. 
+	if !GameManager.players.has(id):
+		# Create and populate a new player object - replace with a resource. 
+		GameManager.players[id] = {
+			"name": name,
+			"id": id
+		}
+	
+	# Update all clients if the peer is the host. 
+	if multiplayer.is_server():
+		for i in GameManager.players:
+			send_player_info.rpc(GameManager.players[i].name, i)
+	
+# Called on all peers. 
+@rpc("any_peer", "call_local")
+func start_game():
+	# Load scene
+	var scene = load("res://scenes/levels/maps/map_1.tscn").instantiate()
+	# Add scene to tree
+	get_tree().root.add_child(scene)
+	# Hide menu scene
+	self.hide()
+	print("Game started.")
+	
+func _on_host_button_down():
+	# Create new peer. 
+	peer = ENetMultiplayerPeer.new()
+	# Check if we have any errors when setting up a server. 
+	var error = peer.create_server(PORT, max_clients)
+	# Print errors if we do. 
+	if error != OK:
+		print("Cannot host! Error Code: " + str(error))
+		return 
+	# Set packet compression 
+	peer.get_host().compress(packet_compression_mode)
+	# Set peer as host, allowing host to play game. 
+	multiplayer.set_multiplayer_peer(peer)
+	print("Waiting for players...")
+	# Add host info to server player list. 
+	send_player_info(player_name.text, multiplayer.get_unique_id())
+	
+func _on_join_button_down():
+	# Create new peer. 
+	peer = ENetMultiplayerPeer.new()
+	# Create new client. 
+	peer.create_client(address, PORT)
+	# Set packet compression 
+	peer.get_host().compress(packet_compression_mode)
+	# Setting peer to corrspond to client. 
+	multiplayer.set_multiplayer_peer(peer)
+		
+func _on_start_game_button_down():
+	# Only allow the host to start the game. 
+	if multiplayer.is_server():
+		start_game.rpc()
