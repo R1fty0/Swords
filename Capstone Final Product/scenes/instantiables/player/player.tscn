@@ -1,4 +1,4 @@
-[gd_scene load_steps=51 format=3 uid="uid://bye5dho4aurjx"]
+[gd_scene load_steps=50 format=3 uid="uid://bye5dho4aurjx"]
 
 [ext_resource type="Script" path="res://scenes/instantiables/player/player.gd" id="1_je6jl"]
 [ext_resource type="Texture2D" uid="uid://c8dca4lpumacs" path="res://assets/art/Treasure Hunters/Treasure Hunters/Captain Clown Nose/Sprites/Captain Clown Nose/Captain Clown Nose with Sword/18-Air Attack 1/Air Attack 1 01.png" id="1_oj27o"]
@@ -237,11 +237,6 @@ radius = 15.1327
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hjb3b"]
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_aof7r"]
-properties/0/path = NodePath(".:position")
-properties/0/spawn = true
-properties/0/replication_mode = 1
-
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_je6jl")
 
@@ -301,10 +296,6 @@ position = Vector2(-29, 2)
 
 [node name="RightHitboxPosition" type="Marker2D" parent="WeaponHitbox"]
 position = Vector2(27, 2)
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-unique_name_in_owner = true
-replication_config = SubResource("SceneReplicationConfig_aof7r")
 
 [connection signal="attack_ended" from="CombatController" to="." method="_on_combat_controller_attack_ended"]
 [connection signal="attacking" from="CombatController" to="." method="_on_combat_controller_attacking"]

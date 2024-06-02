@@ -3,7 +3,6 @@ class_name Player
 
 const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
-@onready var multiplayer_synchronizer = %MultiplayerSynchronizer
 
 @onready var animated_sprite = $AnimatedSprite2D
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
@@ -12,13 +11,9 @@ var is_jumping: bool = false
 var no_movement: bool = false 
 
 
-func _ready():
-	multiplayer_synchronizer.set_multiplayer_authority(str(name).to_int())
-
 func _physics_process(delta):
-	if multiplayer_synchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
-		movement()
-		jumping(delta)
+	movement()
+	jumping(delta)
 	
 func movement():
 	# Prevent the player from contiuning to move while attacking 
@@ -64,6 +59,7 @@ func jumping(delta):
 	# Play landing animation 
 	if is_jumping and is_on_floor() && !no_movement:
 		animated_sprite.play("land_on_ground")
+		
 func _on_combat_controller_attacking():
 	no_movement = true
 

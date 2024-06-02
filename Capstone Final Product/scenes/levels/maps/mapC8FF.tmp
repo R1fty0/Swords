@@ -223,15 +223,6 @@ position = Vector2(372, 425)
 position = Vector2(796, 425)
 
 [node name="MainMenu" parent="." instance=ExtResource("6_vonwh")]
-visible = false
-
-[node name="Players" type="Marker2D" parent="."]
-position = Vector2(378, 414)
-
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://scenes/instantiables/player/player.tscn")
-spawn_path = NodePath("../SpawnPoints/0")
-spawn_limit = 9
 
 [connection signal="button_down" from="MainMenu/UI/MarginContainer/VBoxContainer/Host" to="." method="_on_host_button_down"]
 [connection signal="button_down" from="MainMenu/UI/MarginContainer/VBoxContainer/Join" to="." method="_on_join_button_down"]
